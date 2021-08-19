@@ -27,7 +27,7 @@ def get_args():
                      help="what size to display the album art in.",
                      default=250)
 
-    arg.add_argument("--cache_dir", metavar="\"/path/to/dir\"",
+    arg.add_argument("--cache-dir", metavar="\"/path/to/dir\"",
                      help="Where to store the downloaded cover art.",
                      default=pathlib.Path.home() / ".cache/bum",
                      type=pathlib.Path)
@@ -47,9 +47,10 @@ def get_args():
                     action="store_true",
                     help="Don't run as a server, just download one cover and exit")
 
-    arg.add_argument("--no_display",
+    arg.add_argument("--no-display",
                      action="store_true",
                      help="Only download album art, don't display.")
+
     arg.add_argument("--default_cover",
                      help="Use a custom image for the default cover.")
 
@@ -68,23 +69,20 @@ def main():
     args = get_args()
     process_args(args)
 
-    if not args.no_display:
+    if not args.no-display:
         disp = display.init(args.size)
 
     client = song.init(args.port, args.server)
 
     while True:
-        got_cover = song.get_art(args.cache_dir, args.size, args.default_cover, client)
-        if not args.no_display:
-            display.launch(disp, args.cache_dir / "current.jpg")
+        got_cover = song.get_art(args.cache-dir, args.size, args.default_cover, client)
+        if not args.no-display:
+            display.launch(disp, args.cache-dir / "current.jpg")
 
         if args.no_server:
             exit(int(not got_cover))
 
         client.idle("player")
-
-        print("album: Received player event from mpd. Swapping cover art.")
-
 
 if __name__ == "__main__":
     main()

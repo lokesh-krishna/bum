@@ -18,7 +18,7 @@ def init(port=6600, server="localhost"):
         return client
 
     except ConnectionRefusedError:
-        print("error: Connection refused to mpd/mopidy.")
+        return False
         os._exit(1)  # pylint: disable=W0212
 
 
@@ -27,7 +27,7 @@ def get_art(cache_dir, size, default_cover, client):
     song = client.currentsong()
 
     if len(song) < 2:
-        print("album: Nothing currently playing.")
+        return False
         if default_cover:
             shutil.copy(default_cover, cache_dir / "current.jpg")
             return False
@@ -40,11 +40,9 @@ def get_art(cache_dir, size, default_cover, client):
 
     if file_name.is_file():
         shutil.copy(file_name, cache_dir / "current.jpg")
-        print("album: Found cached art.")
         return True
 
     else:
-        print("album: Downloading...")
 
         brainz.init()
         album_art = brainz.get_cover(song, size)
@@ -57,8 +55,6 @@ def get_art(cache_dir, size, default_cover, client):
         if album_art:
             util.bytes_to_file(album_art, cache_dir / "current.jpg")
             util.bytes_to_file(album_art, file_name)
-
-        print(f"album: Swapped art to {song['artist']}, {song['album']}.")
 
         if album_art:
             return True
