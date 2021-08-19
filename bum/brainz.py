@@ -14,7 +14,7 @@ def init():
                       "https://github.com/dylanaraps/bum")
 
 
-def get_cover(song, size=250, retry_delay=5, retries=5):
+def get_cover(song, size=250, retry_delay=5, retries=1):
     """Download the cover art."""
     try:
         data = mus.search_releases(artist=song["artist"],
