@@ -11,7 +11,6 @@ import argparse
 import pathlib
 import sys
 
-from . import display
 from . import song
 
 from .__init__ import __version__
@@ -69,15 +68,10 @@ def main():
     args = get_args()
     process_args(args)
 
-    if not args.no_display:
-        disp = display.init(args.size)
-
     client = song.init(args.port, args.server)
 
     while True:
         got_cover = song.get_art(args.cache_dir, args.size, args.default_cover, client)
-        if not args.no_display:
-            display.launch(disp, args.cache_dir / "current.jpg")
 
         if args.no_server:
             exit(int(not got_cover))
